@@ -62,7 +62,16 @@ var question1 = {
     imageURL: 'assets/images/black-bart-roberts.jpg'
   };
 
-  var questions = [question1, question2, question3]
+  var question4 = {
+    question: 'I buried my treasure here and there, and to this day people are still hunting for my riches. Who am I?',
+    options: ['Blackbeard', 'Captain Henry Morgan', 'Captain Kidd'],
+    answer: 'Captain Kidd',
+    wrong: ['Blackbeard', 'Captain Henry Morgan'],
+    imageURL: 'assets/images/captain-kidd.jpeg'
+  };
+
+
+  var questions = [question1, question2, question3, question4];
 
   $(document).on("click", "#startButton", function() {
   game.start();
