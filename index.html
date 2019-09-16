@@ -4,8 +4,8 @@
     <meta charset="utf-8">
 	<title>Trivia Game</title>	
 	<!-- Bootstrap Cdn -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<!-- CSS LINKS -->
     <link rel="stylesheet" type="text/css" href="assets/css/reset.css">
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
@@ -19,33 +19,118 @@
 </head>
 
 <body>
-        <div id="wrapper">
-          <div id="gradient">
-            <div class="container">
-              <section class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12">
-                  <div class="jumbotron animated zoomIn">
-                    <h1>Trivial PIRATEsuit</h1>
-                    <h5 class="timeRemaining"></h5>
-                    <h3 class="question questionHeader"></h3>
-                    <div class="answers"></div>
-                    <p class="start-button text-center animated zoomInDown">
-                      <a class="btn btn-primary btn-lg startButton animated pulse infinite" href="#" role="button">
-                        <span class="glyphicon glyphicon-off"></span>
-                      </a>
-                    </p>
-                  </div>
-                </div>
-              </section>
-            </div>
-          </div>
-        </div>
+
+    <div class="container-fluid-overall">
+    <h1>Trivia PIRATEsuit</h1>
+
+    <div class="container-main" id="main">
+      <h3 id="instructions">ARRRRGH ME MATEYS!</h3>
+      <p id="instructionsP">How much do ye know about the salty seadog masters and plunderers of the briny deep? Test your Pirate smarts!<br><img src="assets/images/blackbeard-pirate-combat.jpeg" id="pirateFight"></p>
+      <button type="button" class="btn btn-primary" id="startButton">Hoist Yer Sails And Let's Begin!</button>
+    </div>
+    </div>
+
         <!-- local JS file link -->
           
           <script>
           //Global Variables
 //===========================
-var correctAnswers = 0;
+var card = $("#main");
+
+var question1 = {
+  question: 'I captained the Queen Anne\'s \ Revenge and placed lit matches under my hat to make my enemies believe I reeked of hellfire. I even blockaded the port of Charleston and made off with choice valuables before I met my end in a battle at Ocracoke. Who am I?',
+    options: ['Bartholomew Roberts', 'Blackbeard', 'Captain Henry Morgan'],
+    answer: 'Blackbeard',
+    wrong: ['Bartholomew Roberts', 'Captain Henry Morgan'],
+    imageURL: 'assets/images/blackbeard.jpg'
+  };
+
+  var question2 = {
+    question: 'I plundered settlements and ships on the Spanish Main, and even the King of England treated me as a hero for stickin\'\ it to Spain. You may have heard of the rum with my name. Who am I?',
+    options: ['Captain Henry Morgan', 'Captain Kidd', 'Blackbeard'],
+    answer: 'Captain Henry Morgan',
+    wrong: ['Captain Kidd', 'Blackbeard'],
+    imageURL: 'assets/images/captain-morgan.jpg'
+
+  };
+
+  var question3 = {
+    question: '400 ships my crew and I snatched as we ventured from the Caribbean to West Africa; even my enemies swore I was invincible! A merry life and a short one was my motto. Who am I?',
+    options: ['Captain Kidd', 'Bartholomew Roberts', 'Captain Henry Morgan'],
+    answer: 'Bartholomew Roberts',
+    wrong: ['Captain Kidd', 'Captain Henry Morgan'],
+    imageURL: 'assets/images/black-bart-roberts.jpg'
+  };
+
+  var questions = [question1, question2, question3]
+
+  $(document).on("click", "#startButton", function() {
+  game.start();
+  });
+
+$(document).on("click", "#done", function(){
+  game.done();
+})
+
+var game = {
+  correct: 0,
+  incorrect: 0,
+  counter: 120,
+
+  countdown: function() {
+    game.counter--;
+    $("#counter-number").html(game.counter);
+    if (game.counter === 0) {
+      alert("Time's Up!");
+      game.done(); //NEED DONE FUNCTION
+    }
+  },
+
+  start: function() {
+
+$("#instructions").hide();
+$("#instructionsP").hide();
+timer = setInterval(game.countdown, 1000);
+
+$("#main").prepend(
+  "<h2>Time Remaining: <span id='counter-number'>120</span> Seconds </h2>"
+);
+$("#startButton").remove();
+
+for (var i = 0; i < questions.length; i++) {
+  card.append("<h3>" + questions[i].question + "</h3>");
+
+  for (var j = 0; j < questions[i].options.length; j++) {
+    card.append(
+      "<p> <input type='radio' class='question" +
+        i + "' name='question" +
+        i +
+        "' value='" +
+        questions[i].options[j] + "'>" + questions[i].options[j] + "</p>");
+    }
+  }
+card.append("<button id='done'>Done</button>");
+},
+
+done: function() {
+  var inputs = [$(".question0:checked").val(), $(".question1:checked").val(), $(".question2:checked").val()];
+  for (var i=0; i < inputs.length; i++) {
+    if (inputs[i] === questions[i].correct) {
+      game.correct++;
+    } else {
+      game.incorrect++;
+    }
+  }
+  console.log("correct" + game.correct);
+  console.log("incorrect:" + game.incorrect);
+  ///this.result(); NEED TO MAKE
+
+
+  }
+}
+
+
+/*var correctAnswers = 0;
 var incorrectAnswers = 0;
 var unansweredQuestions;
 var timeRemaining = 16;
@@ -94,7 +179,7 @@ var triviaGame = [
 //=====================================
   function startGame() {
     console.log("game has started");
-    $(".startButton").remove();
+    $("#startButton").remove();
     correctAnswers = 0;
     incorrectAnswers = 0;
     createQuestions();
@@ -181,8 +266,9 @@ var createQuestions = function () {
         }
     };
 
-    $('.startButton').on("click", function () {
-        $('.startButton');
+    $('#startButton').on("click", function (event) {
+        event.preventDefault();
+        console.log("the game has begun");
         startGame();
 
     });
@@ -190,7 +276,7 @@ var createQuestions = function () {
     
     
     
-    }
+    }*/
           </script>
       </body>
       </html>
